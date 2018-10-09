@@ -49,6 +49,11 @@ taskNotFound taskName =
         <+> red (text "does not exist")
         <> linebreak
 
+noTasks :: IO ()
+noTasks =
+  putDoc $ white (text "There are no logged tasks")
+        <> linebreak
+
 taskDeleted :: String -> IO ()
 taskDeleted taskName =
   putDoc $ red (text "Task")

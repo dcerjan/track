@@ -82,7 +82,9 @@ printStatus task = do
   case st of
     Left e -> error e
     Right state -> case task of
-      Nothing -> mapM_ sumarizeStatus $ state ^. tasks
+      Nothing -> if null (state ^. tasks)
+        then noTasks
+        else mapM_ sumarizeStatus $ state ^. tasks
       Just taskName -> do
         let t = (state & tasks %~ filter (\x -> x ^. name == taskName)) ^. tasks
         if Prelude.null t
