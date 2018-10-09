@@ -22,7 +22,6 @@ data Command
 
 main :: IO ()
 main = do
-  -- check for first run
   dir <- getHomeDirectory
   fileExists <- doesFileExist $ dir ++ "/.track.json"
   unless fileExists $ writeState $ Track []

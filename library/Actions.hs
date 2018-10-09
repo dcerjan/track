@@ -30,10 +30,10 @@ pauseTask taskName = do
   case st of
     Left e -> error e
     Right state -> do
-      let foundTasks = (state & tasks %~ filter (\x -> x ^. name == taskName)) ^. tasks
-      if null foundTasks
-        then taskNotFound taskName
-        else do
+      let foundTask = find (\x -> x ^. name == taskName) (state ^. tasks)
+      case foundTask of
+        Nothing -> taskNotFound taskName
+        Just _ -> do
           time <- currentTime
           writeState $ state & tasks %~ map (
                         \x -> if x ^. name == taskName
@@ -69,10 +69,10 @@ deleteTask taskName = do
   case st of
     Left e -> error e
     Right state -> do
-      let foundTasks = (state & tasks %~ filter (\x -> x ^. name == taskName)) ^. tasks
-      if null foundTasks
-        then taskNotFound taskName
-        else do
+      let foundTask = find (\x -> x ^. name == taskName) (state ^. tasks)
+      case foundTask of
+        Nothing -> taskNotFound taskName
+        Just _ -> do
           writeState $ state & tasks %~ filter (\x -> x ^. name /= taskName)
           taskDeleted taskName
 
@@ -86,7 +86,7 @@ printStatus task = do
         then noTasks
         else mapM_ sumarizeStatus $ state ^. tasks
       Just taskName -> do
-        let t = (state & tasks %~ filter (\x -> x ^. name == taskName)) ^. tasks
-        if Prelude.null t
-          then taskNotFound taskName
-          else mapM_ sumarizeStatus t
+        let foundTask = find (\x -> x ^. name == taskName) (state ^. tasks)
+        case foundTask of
+          Nothing -> taskNotFound taskName
+          Just t -> mapM_ sumarizeStatus [t]
