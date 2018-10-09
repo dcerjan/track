@@ -6,8 +6,11 @@ module TrackApp (main) where
 import System.Environment
 import Options.Applicative
 import Data.Semigroup ((<>))
+import Control.Monad
+import System.Directory
 
 import Actions
+import Models.Track
 
 newtype Opts = Opts { optCommand :: Command }
 
@@ -19,6 +22,11 @@ data Command
 
 main :: IO ()
 main = do
+  -- check for first run
+  dir <- getHomeDirectory
+  fileExists <- doesFileExist $ dir ++ "/.track.json"
+  unless fileExists $ writeState $ Track []
+
   args <- getArgs
 
   if null args

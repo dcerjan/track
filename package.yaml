@@ -30,6 +30,7 @@ library:
   - text
   - lens
   - ansi-wl-pprint
+  - directory
   source-dirs: library
 
 executables:

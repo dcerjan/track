@@ -6,6 +6,7 @@ import Data.Aeson.Text (encodeToLazyText)
 import Data.Text.Lazy.IO as I
 import Data.ByteString as B hiding (filter, map, null, find)
 import Control.Lens
+import System.Directory
 
 import Models.Track
 import Models.Task
@@ -14,10 +15,14 @@ import Utils
 type Action = (Track -> Track)
 
 getState :: IO (Either String Track)
-getState = (eitherDecodeStrict' <$> B.readFile "~.track.json") :: IO (Either String Track)
+getState = do
+  dir <- getHomeDirectory
+  (eitherDecodeStrict' <$> B.readFile (dir ++ "/.track.json")) :: IO (Either String Track)
 
 writeState :: Track -> IO ()
-writeState = I.writeFile "~/.track.json" . encodeToLazyText
+writeState track = do
+  dir <- getHomeDirectory
+  I.writeFile (dir ++ "/.track.json") (encodeToLazyText track)
 
 pauseTask :: String -> IO ()
 pauseTask taskName = do
