@@ -64,20 +64,20 @@ taskDeleted taskName =
 taskStarted :: String -> IO ()
 taskStarted taskName =
   putDoc $ green (text "Task")
-    <+> white (text "[") <> green (text taskName) <> white (text "]")
-    <+> green (text "started")
-    <> linebreak
+        <+> white (text "[") <> green (text taskName) <> white (text "]")
+        <+> green (text "started")
+        <> linebreak
 
 taskPaused :: String -> IO ()
 taskPaused taskName =
   putDoc $ green (text "Task")
-    <+> white (text "[") <> green (text taskName) <> white (text "]")
-    <+> green (text "paused")
-    <> linebreak
+        <+> white (text "[") <> green (text taskName) <> white (text "]")
+        <+> green (text "paused")
+        <> linebreak
 
 taskAlreadyInProgress :: String -> IO ()
 taskAlreadyInProgress taskName =
   putDoc $ green (text "Task")
-    <+> white (text "[") <> green (text taskName) <> white (text "]")
-    <+> green (text "is already in progress")
-    <> linebreak
+        <+> white (text "[") <> green (text taskName) <> white (text "]")
+        <+> green (text "is already in progress")
+        <> linebreak
