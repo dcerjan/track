@@ -21,9 +21,7 @@ toHMS :: Int -> (Int, Int, Int)
 toHMS seconds = (quot seconds 3600, flip mod 60 $ quot seconds 60, mod seconds 60)
 
 timeSpent :: Task -> IO (Int, Int, Int)
-timeSpent t = do
-  total <- diff t
-  return $ toHMS total
+timeSpent t = toHMS <$> diff t
 
 sumarizeStatus :: Task -> IO ()
 sumarizeStatus task = do
