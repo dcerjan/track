@@ -12,14 +12,10 @@ currentTime = fromEnum . utSeconds <$> getUnixTime
 diff :: Task -> IO Int
 diff t = do
   time <- currentTime
-  return $ if isPaused t
-    then sumAll $ t ^. checkpoints
-    else sumAll $ (t ^. checkpoints) ++ [time]
+  return $ sumDiffs $ t ^. checkpoints ++ [time | not $ isPaused t]
   where
-    sumAll :: [Int] -> Int
-    sumAll (a:b:rest) = (b - a) + sumAll rest
-    sumAll [_] = 0
-    sumAll [] = 0
+    sumDiffs (a:b:rest) = (b - a) + sumDiffs rest
+    sumDiffs _ = 0
 
 toHMS :: Int -> (Int, Int, Int)
 toHMS seconds = (quot seconds 3600, flip mod 60 $ quot seconds 60, mod seconds 60)
@@ -33,13 +29,16 @@ sumarizeStatus :: Task -> IO ()
 sumarizeStatus task = do
   (hours, minutes, seconds) <- timeSpent task
   let taskName = task ^. name
-  putDoc $ white (text "Task")
-        <+> white (text "[") <> green (text taskName) <> white (text "]")
-        <+> white (text "[") <> green (text (if isPaused task then "Paused" else "In Progress")) <> white (text "]")
-        <+> white (text "::")
-        <+> green (text $ show hours) <> white (text "h")
-        <+> green (text $ show minutes) <> white (text "m")
-        <+> green (text $ show seconds) <> white (text "s")
+  let g = if isPaused task then green else dullgreen
+  let w = if isPaused task then white else dullwhite
+  let c = if isPaused task then cyan else dullcyan
+  putDoc $ c (text "Task")
+        <+> w (text "[") <> g (text taskName) <> w (text "]")
+        <+> w (text "[") <> g (text (if isPaused task then "Paused" else "In Progress")) <> w (text "]")
+        <+> w (text "::")
+        <+> g (text $ show hours) <> w (text "h")
+        <+> g (text $ show minutes) <> w (text "m")
+        <+> g (text $ show seconds) <> w (text "s")
         <> linebreak
 
 taskNotFound :: String -> IO ()

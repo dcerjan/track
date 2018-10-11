@@ -59,21 +59,17 @@ main = do
       viewCommand )
 
     createCommand :: Mod CommandFields Command
-    createCommand = command "start" (info createOptions (progDesc "Start a new task"))
-    createOptions :: Parser Command
-    createOptions = Start <$> strArgument (metavar "NAME" <> help "Name of the task to create")
+    createCommand = command "start" $ info start (progDesc "Start a new task")
+                    where start = Start <$> strArgument (metavar "NAME" <> help "Name of the task to create")
 
     pauseCommand :: Mod CommandFields Command
-    pauseCommand = command "pause" (info pauseOptions (progDesc "Pause a task"))
-    pauseOptions :: Parser Command
-    pauseOptions = Pause <$> strArgument (metavar "NAME" <> help "Name of the task to pause")
+    pauseCommand = command "pause" $ info pause (progDesc "Pause a task")
+                   where pause = Pause <$> strArgument (metavar "NAME" <> help "Name of the task to pause")
 
     deleteCommand :: Mod CommandFields Command
-    deleteCommand = command "delete" (info deleteOptions (progDesc "Delete a task"))
-    deleteOptions :: Parser Command
-    deleteOptions = Delete <$> strArgument (metavar "NAME" <> help "Name of the task to delete")
+    deleteCommand = command "delete" $ info delete (progDesc "Delete a task")
+                    where delete = Delete <$> strArgument (metavar "NAME" <> help "Name of the task to delete")
 
     viewCommand :: Mod CommandFields Command
-    viewCommand = command "view" (info viewOptions (progDesc "View tasks"))
-    viewOptions :: Parser Command
-    viewOptions = View <$> strArgument (metavar "NAME" <> help "Name of the task to view")
+    viewCommand = command "view" $ info view (progDesc "View tasks")
+                  where view = View <$> strArgument (metavar "NAME" <> help "Name of the task to view")
